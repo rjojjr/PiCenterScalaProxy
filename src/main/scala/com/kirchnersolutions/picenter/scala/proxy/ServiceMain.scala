@@ -8,7 +8,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants
-import com.kirchnersolutions.picenter.scala.proxy.client.Client.logon
+import com.kirchnersolutions.picenter.scala.proxy.client.Client.{logon, logOut}
 
 import com.typesafe.config.ConfigFactory
 
@@ -17,6 +17,35 @@ import scala.io.StdIn
 
 object ServiceMain  {
   // this configs are in the application.conf file
+
+  object LoginRouter {
+    val route = path(PiCenterConstants.LOGIN_ENDPOINT){
+      post{
+
+        /*entity(as[JsValue]) { json =>
+          complete(s"Person: ${json.asJsObject.fields("name")} - favorite number: ${json.asJsObject.fields("favoriteNumber")}")
+        }*/
+        entity(as[PiCenterConstants.LogonForm]) { logonForm =>
+          val res = logon(logonForm)
+          complete(res)
+          //          complete(res)
+        }
+      }
+    }
+  }
+
+  object LogoutRouter {
+    var route = path(PiCenterConstants.LOGOUT_ENDPOINT){
+      get{
+        val res = logOut()
+        complete(res)
+      }
+    }
+  }
+
+  object MainRouter {
+    val routes = LoginRouter.route ~ LogoutRouter.route
+  }
 
   def main(args: Array[String]): Unit ={
 
@@ -29,7 +58,10 @@ object ServiceMain  {
 
 
     implicit val materializer = ActorMaterializer()  // bindAndHandle requires an implicit materializer
-    def loginRoute: Route = path(PiCenterConstants.LOGIN_ENDPOINT){
+
+
+
+    /*def loginRoute: Route = path(PiCenterConstants.LOGIN_ENDPOINT){
       post{
 
         /*entity(as[JsValue]) { json =>
@@ -38,12 +70,21 @@ object ServiceMain  {
         entity(as[PiCenterConstants.LogonForm]) { logonForm =>
           val res = logon(logonForm)
           complete(res)
-//          complete(res)
+          //          complete(res)
         }
       }
     }
+
+    def logoutRoute: Route = path(PiCenterConstants.LOGOUT_ENDPOINT){
+      get{
+          val res = logOut()
+          complete(res)
+        }
+      }
+    }*/
+
     val errorHandler = ExceptionHandler { case exception => complete(StatusCodes.BadRequest, exception.toString) }
-    def routes = handleExceptions(errorHandler) { loginRoute }
+    def routes = handleExceptions(errorHandler) { loginRoute, logoutRoute }
     val bindingFuture = Http().bindAndHandle(routes, host, port)
 
     //Comment last lines out to run ~reStart

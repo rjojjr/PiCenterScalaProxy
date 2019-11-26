@@ -55,7 +55,8 @@ object Client extends {
       case response @ HttpResponse(StatusCodes.OK, _, _, _) if (response.entity.contentType == ContentTypes.`application/json`) =>
         val entity = response.entity
         responseUnmarshaller(entity)
-      case _ => 
+      case _ =>
+
         Future.failed(new RuntimeException("something went wrong"))
     }
   }
