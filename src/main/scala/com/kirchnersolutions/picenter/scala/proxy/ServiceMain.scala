@@ -46,7 +46,7 @@ object ServiceMain  {
     def routes = handleExceptions(errorHandler) { loginRoute }
     val bindingFuture = Http().bindAndHandle(routes, host, port)
 
-    println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
+    println(s"Server online at " + host + ":" + port + "\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return
     bindingFuture
       .flatMap(_.unbind()) // trigger unbinding from the port

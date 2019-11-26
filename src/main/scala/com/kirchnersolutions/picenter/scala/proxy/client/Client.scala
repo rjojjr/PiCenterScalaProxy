@@ -46,8 +46,8 @@ object Client extends {
     inetAddress.getHostAddress
   }
 
-  def getUri(prefix: String, hostName: String, port: String, ip: String => String): String = {
-    prefix + ip(prefix + hostName) + ":" + port + "/"
+  def getUri(protocol: String, hostName: String, port: String, ip: String => String): String = {
+    protocol + ip(hostName) + ":" + port + "/"
   }
 
 }
