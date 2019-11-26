@@ -41,6 +41,25 @@ object Client extends {
     }
   }
 
+  def logOut()(implicit ec: ExecutionContext, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
+
+    implicit val system = ActorSystem()
+    implicit val materializer = ActorMaterializer()
+    implicit val executionContext: ExecutionContextExecutor = system.dispatcher
+    val url = getUri(PROTOCOL, HOST_NAME, PORT, getIP)
+    val uri = url + LOGOUT_ENDPOINT
+
+
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = uri))
+    responseFuture.flatMap {
+      case response @ HttpResponse(StatusCodes.OK, _, _, _) if (response.entity.contentType == ContentTypes.`application/json`) =>
+        val entity = response.entity
+        responseUnmarshaller(entity)
+      case _ => 
+        Future.failed(new RuntimeException("something went wrong"))
+    }
+  }
+
   def getIP(hostName: String): String = {
     val inetAddress: InetAddress = InetAddress.getByName(hostName)
     inetAddress.getHostAddress
