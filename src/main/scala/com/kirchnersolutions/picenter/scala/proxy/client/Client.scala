@@ -5,16 +5,15 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.FromEntityUnmarshaller
 import akka.stream.ActorMaterializer
-
 import java.net._
 
+import com.kirchnersolutions.picenter.scala.proxy.client.traits.AddressParser
 import io.circe.syntax._
-
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants._
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
-object Client extends {
+object Client extends AddressParser {
 
   def logon(form: LogonForm)(implicit ec: ExecutionContext, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
@@ -57,14 +56,6 @@ object Client extends {
     }
   }
 
-  private def getIP(hostName: String): String = {
-    val inetAddress: InetAddress = InetAddress.getByName(hostName)
-    inetAddress.getHostAddress
-  }
 
-  private def getUri(protocol: String, hostName: String, port: String, ip: String => String): String = {
-    val ipAddress = ip(hostName)
-    s"$protocol${ipAddress}:$port/"
-  }
 
 }
