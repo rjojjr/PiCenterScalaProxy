@@ -6,12 +6,12 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.{ExceptionHandler, Route}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
-
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants
-import com.kirchnersolutions.picenter.scala.proxy.client.Client.{logon, logOut}
-
+import com.kirchnersolutions.picenter.scala.proxy.client.Client.{logOut, logon}
+import com.kirchnersolutions.picenter.scala.proxy.routes.{LoginRouter, LogoutRouter}
 import com.typesafe.config.ConfigFactory
 
+import scala.concurrent.ExecutionContext
 import scala.io.StdIn
 
 
@@ -29,28 +29,9 @@ object WebService  {
 
     implicit val materializer = ActorMaterializer()  // bindAndHandle requires an implicit materializer
 
-    object LoginRouter {
-      val route = path(PiCenterConstants.LOGIN_ENDPOINT){
-        post{
-          entity(as[PiCenterConstants.LogonForm]) { logonForm =>
-            val res = logon(logonForm)
-            complete(res)
-          }
-        }
-      }
-    }
 
-    object LogoutRouter {
-      var route = path(PiCenterConstants.LOGOUT_ENDPOINT){
-        get{
-          val res = logOut()
-          complete(res)
-        }
-      }
-    }
-
-    object MainRouter {
-      val routes = LoginRouter.route ~ LogoutRouter.route
+    object MainRouter extends LoginRouter with LogoutRouter {
+      val routes = loginRoute ~ logoutRoute
     }
 
     val errorHandler = ExceptionHandler { case exception => complete(StatusCodes.BadRequest, exception.toString) }

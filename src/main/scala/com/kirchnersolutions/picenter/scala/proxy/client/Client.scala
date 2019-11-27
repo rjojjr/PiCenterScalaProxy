@@ -57,13 +57,14 @@ object Client extends {
     }
   }
 
-  def getIP(hostName: String): String = {
+  private def getIP(hostName: String): String = {
     val inetAddress: InetAddress = InetAddress.getByName(hostName)
     inetAddress.getHostAddress
   }
 
-  def getUri(protocol: String, hostName: String, port: String, ip: String => String): String = {
-    protocol + ip(hostName) + ":" + port + "/"
+  private def getUri(protocol: String, hostName: String, port: String, ip: String => String): String = {
+    val ipAddress = ip(hostName)
+    s"$protocol${ipAddress}:$port/"
   }
 
 }
