@@ -17,9 +17,6 @@ object Client extends AddressParser {
 
   def logon(form: LogonForm)(implicit ec: ExecutionContext, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
-    implicit val system = ActorSystem()
-    implicit val materializer = ActorMaterializer()
-    implicit val executionContext: ExecutionContextExecutor = system.dispatcher
     val json = form.asJson
     val postEntity = json.toString()
     val url = getUri(PROTOCOL, HOST_NAME, PORT, getIP)
@@ -36,13 +33,11 @@ object Client extends AddressParser {
           responseUnmarshaller(entity)
       case _ => Future.failed(new RuntimeException("something went wrong"))
     }
+
   }
 
   def logOut()(implicit ec: ExecutionContext, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
-    implicit val system = ActorSystem()
-    implicit val materializer = ActorMaterializer()
-    implicit val executionContext: ExecutionContextExecutor = system.dispatcher
     val url = getUri(PROTOCOL, HOST_NAME, PORT, getIP)
     val uri = url + LOGOUT_ENDPOINT
 
@@ -56,6 +51,10 @@ object Client extends AddressParser {
     }
   }
 
+  def summary()(implicit ec: ExecutionContext, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
+    val url = getUri(PROTOCOL, HOST_NAME, PORT, getIP)
+    val uri = url + SUMMARY_ENDPOINT
+  }
 
 }
