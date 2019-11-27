@@ -11,7 +11,7 @@ trait AddressParser {
 
   def getUri(protocol: String, hostName: String, port: String, ip: String => String): String = {
     val ipAddress = ip(hostName)
-    s"$protocol${ipAddress}:$port/"
+    s"$protocol://${ipAddress}:$port/"
   }
 
 }

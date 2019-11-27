@@ -1,19 +1,17 @@
 package com.kirchnersolutions.picenter.scala.proxy.client
 
-import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.FromEntityUnmarshaller
-import akka.stream.ActorMaterializer
-import java.net._
 
 import com.kirchnersolutions.picenter.scala.proxy.client.traits.AddressParser
-import io.circe.syntax._
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants._
+import com.kirchnersolutions.picenter.scala.proxy.models._
 import com.kirchnersolutions.picenter.scala.proxy.traits.ConfigValues
-import com.typesafe.config.{Config, ConfigFactory}
 
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
+import io.circe.syntax._
+
+import scala.concurrent.{ExecutionContext, Future}
 
 object Client extends AddressParser with ConfigValues {
 
