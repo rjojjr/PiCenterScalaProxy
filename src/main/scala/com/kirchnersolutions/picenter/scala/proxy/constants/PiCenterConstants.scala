@@ -4,7 +4,9 @@ import com.kirchnersolutions.picenter.scala.proxy.traits.RestObject
 
 object PiCenterConstants {
 
-  final val HOST_NAME = "http://97.92.200.75:7733"
+  final val PROTOCOL = "http://"
+  final val HOST_NAME = "kirchnerbusinesssolutions.com"
+  final val PORT = "7733"
   final val LOGIN_ENDPOINT = "login"
   final val LOGOUT_ENDPOINT = "logout"
   final val SUMMARY_ENDPOINT = "summary"
