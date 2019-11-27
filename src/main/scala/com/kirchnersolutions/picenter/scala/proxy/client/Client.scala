@@ -10,16 +10,20 @@ import java.net._
 import com.kirchnersolutions.picenter.scala.proxy.client.traits.AddressParser
 import io.circe.syntax._
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants._
+import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 object Client extends AddressParser {
 
-  def logon(form: LogonForm)(implicit ec: ExecutionContext, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
+
+
+  def logon(form: LogonForm)(implicit ec: ExecutionContext, config: Config, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
     val json = form.asJson
     val postEntity = json.toString()
-    val url = getUri(PROTOCOL, HOST_NAME, PORT, getIP)
+    //val url = getUri(PROTOCOL, HOST_NAME, PORT, getIP)
+    val url = getUri(config.getString("host.protocol"), config.getString("host.host_name"), PORT, getIP)
     val req = HttpRequest(
       method = HttpMethods.POST,
       uri = url + LOGIN_ENDPOINT,

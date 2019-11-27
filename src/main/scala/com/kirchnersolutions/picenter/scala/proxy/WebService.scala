@@ -9,19 +9,21 @@ import akka.stream.ActorMaterializer
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants
 import com.kirchnersolutions.picenter.scala.proxy.client.Client.{logOut, logon}
 import com.kirchnersolutions.picenter.scala.proxy.routes.{LoginRouter, LogoutRouter}
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.concurrent.ExecutionContext
 import scala.io.StdIn
 
+import com.kirchnersolutions.picenter.scala.proxy.traits.ConfigValues
 
-object WebService  {
+
+object WebService extends ConfigValues{
 
   def main(args: Array[String]): Unit ={
 
-    val config = ConfigFactory.load()
-    val host = config.getString("http.host") // Gets the host and a port from the configuration
-    val port = config.getInt("http.port")
+
+
+
 
     implicit val system: ActorSystem = ActorSystem("actor-system")  // ActorMaterializer requires an implicit ActorSystem
     implicit val executionContextExecutor = system.dispatcher  // bindingFuture.map requires an implicit ExecutionContext
