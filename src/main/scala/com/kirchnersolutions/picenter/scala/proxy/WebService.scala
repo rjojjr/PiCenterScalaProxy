@@ -21,10 +21,6 @@ object WebService extends ConfigValues{
 
   def main(args: Array[String]): Unit ={
 
-
-
-
-
     implicit val system: ActorSystem = ActorSystem("actor-system")  // ActorMaterializer requires an implicit ActorSystem
     implicit val executionContextExecutor = system.dispatcher  // bindingFuture.map requires an implicit ExecutionContext
     implicit val materializer = ActorMaterializer()  // bindAndHandle requires an implicit materializer
