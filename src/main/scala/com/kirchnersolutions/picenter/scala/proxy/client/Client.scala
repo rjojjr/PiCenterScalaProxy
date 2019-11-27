@@ -1,28 +1,25 @@
 package com.kirchnersolutions.picenter.scala.proxy.client
 
+import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.unmarshalling.FromEntityUnmarshaller
-
-import com.kirchnersolutions.picenter.scala.proxy.client.traits.AddressParser
+import com.kirchnersolutions.picenter.scala.proxy.client.traits.Addresses
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants._
 import com.kirchnersolutions.picenter.scala.proxy.models._
 import com.kirchnersolutions.picenter.scala.proxy.traits.ConfigValues
-
 import io.circe.syntax._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object Client extends AddressParser with ConfigValues {
+object Client extends Addresses with ConfigValues {
 
-
-
-  def logon(form: LogonForm)(implicit ec: ExecutionContext, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
+  def logon(form: LogonForm)(implicit ec: ExecutionContext, ac: ActorSystem, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
     val json = form.asJson
     val postEntity = json.toString()
-    //val url = getUri(PROTOCOL, HOST_NAME, PORT, getIP)
     val url = getUri(protocol, host_name, host_port, getIP)
+
     val req = HttpRequest(
       method = HttpMethods.POST,
       uri = url + LOGIN_ENDPOINT,
@@ -30,6 +27,7 @@ object Client extends AddressParser with ConfigValues {
     )
 
     val responseFuture: Future[HttpResponse] = Http().singleRequest(req)
+
     responseFuture.flatMap {
       case response @ HttpResponse(StatusCodes.OK, _, _, _) if (response.entity.contentType == ContentTypes.`application/json`) =>
           val entity = response.entity
@@ -39,7 +37,7 @@ object Client extends AddressParser with ConfigValues {
 
   }
 
-  def logOut()(implicit ec: ExecutionContext, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
+  def logOut()(implicit ec: ExecutionContext, ac: ActorSystem, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
     val url = getUri(protocol, host_name, host_port, getIP)
     val uri = url + LOGOUT_ENDPOINT
@@ -58,6 +56,7 @@ object Client extends AddressParser with ConfigValues {
 
     val url = getUri(protocol, host_name, host_port, getIP)
     val uri = url + SUMMARY_ENDPOINT
+
   }
 
 }

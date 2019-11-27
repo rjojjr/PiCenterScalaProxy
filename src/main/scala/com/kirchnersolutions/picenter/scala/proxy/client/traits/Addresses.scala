@@ -2,7 +2,7 @@ package com.kirchnersolutions.picenter.scala.proxy.client.traits
 
 import java.net.InetAddress
 
-trait AddressParser {
+trait Addresses {
 
   def getIP(hostName: String): String = {
     val inetAddress: InetAddress = InetAddress.getByName(hostName)
