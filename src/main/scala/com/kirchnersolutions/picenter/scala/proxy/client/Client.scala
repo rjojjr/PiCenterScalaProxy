@@ -26,11 +26,9 @@ object Client extends {
     val url = getUri(PROTOCOL, HOST_NAME, PORT, getIP)
     val req = HttpRequest(
       method = HttpMethods.POST,
-     // uri = getUri("http://", PORT, getIP)
       uri = url + LOGIN_ENDPOINT,
       entity = HttpEntity(ContentTypes.`application/json`, postEntity)
     )
-
 
     val responseFuture: Future[HttpResponse] = Http().singleRequest(req)
     responseFuture.flatMap {
@@ -49,14 +47,12 @@ object Client extends {
     val url = getUri(PROTOCOL, HOST_NAME, PORT, getIP)
     val uri = url + LOGOUT_ENDPOINT
 
-
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = uri))
     responseFuture.flatMap {
       case response @ HttpResponse(StatusCodes.OK, _, _, _) if (response.entity.contentType == ContentTypes.`application/json`) =>
         val entity = response.entity
         responseUnmarshaller(entity)
       case _ =>
-
         Future.failed(new RuntimeException("something went wrong"))
     }
   }
