@@ -15,37 +15,9 @@ import com.typesafe.config.ConfigFactory
 import scala.io.StdIn
 
 
-object ServiceMain  {
+object WebService  {
   // this configs are in the application.conf file
 
-  object LoginRouter {
-    val route = path(PiCenterConstants.LOGIN_ENDPOINT){
-      post{
-
-        /*entity(as[JsValue]) { json =>
-          complete(s"Person: ${json.asJsObject.fields("name")} - favorite number: ${json.asJsObject.fields("favoriteNumber")}")
-        }*/
-        entity(as[PiCenterConstants.LogonForm]) { logonForm =>
-          val res = logon(logonForm)
-          complete(res)
-          //          complete(res)
-        }
-      }
-    }
-  }
-
-  object LogoutRouter {
-    var route = path(PiCenterConstants.LOGOUT_ENDPOINT){
-      get{
-        val res = logOut()
-        complete(res)
-      }
-    }
-  }
-
-  object MainRouter {
-    val routes = LoginRouter.route ~ LogoutRouter.route
-  }
 
   def main(args: Array[String]): Unit ={
 
@@ -59,6 +31,34 @@ object ServiceMain  {
 
     implicit val materializer = ActorMaterializer()  // bindAndHandle requires an implicit materializer
 
+    object LoginRouter {
+      val route = path(PiCenterConstants.LOGIN_ENDPOINT){
+        post{
+
+          /*entity(as[JsValue]) { json =>
+            complete(s"Person: ${json.asJsObject.fields("name")} - favorite number: ${json.asJsObject.fields("favoriteNumber")}")
+          }*/
+          entity(as[PiCenterConstants.LogonForm]) { logonForm =>
+            val res = logon(logonForm)
+            complete(res)
+            //          complete(res)
+          }
+        }
+      }
+    }
+
+    object LogoutRouter {
+      var route = path(PiCenterConstants.LOGOUT_ENDPOINT){
+        get{
+          val res = logOut()
+          complete(res)
+        }
+      }
+    }
+
+    object MainRouter {
+      val routes = LoginRouter.route ~ LogoutRouter.route
+    }
 
 
     /*def loginRoute: Route = path(PiCenterConstants.LOGIN_ENDPOINT){
@@ -84,7 +84,7 @@ object ServiceMain  {
     }*/
 
     val errorHandler = ExceptionHandler { case exception => complete(StatusCodes.BadRequest, exception.toString) }
-    def routes = handleExceptions(errorHandler) { loginRoute, logoutRoute }
+    def routes = handleExceptions(errorHandler) { MainRouter.routes }
     val bindingFuture = Http().bindAndHandle(routes, host, port)
 
     //Comment last lines out to run ~reStart
