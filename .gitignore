@@ -4,6 +4,9 @@
 *.log
 null
 
+/project/target/
+/target/
+
 ### Example user template template
 ### Example user template
 
