@@ -17,6 +17,5 @@ trait LoginRouter {
         complete(res)
       }
     }
-
   }
 }

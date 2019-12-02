@@ -8,12 +8,11 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants
 import com.kirchnersolutions.picenter.scala.proxy.client.Client.{logOut, logon}
-import com.kirchnersolutions.picenter.scala.proxy.routes.{LoginRouter, LogoutRouter}
+import com.kirchnersolutions.picenter.scala.proxy.routes.{LoginRouter, LogoutRouter, SummaryRouter}
 import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.concurrent.ExecutionContext
 import scala.io.StdIn
-
 import com.kirchnersolutions.picenter.scala.proxy.traits.ConfigValues
 
 
@@ -26,8 +25,8 @@ object WebService extends ConfigValues{
     implicit val materializer = ActorMaterializer()  // bindAndHandle requires an implicit materializer
 
 
-    object MainRouter extends LoginRouter with LogoutRouter {
-      val routes = loginRoute ~ logoutRoute
+    object MainRouter extends LoginRouter with LogoutRouter with SummaryRouter {
+      val routes = loginRoute ~ logoutRoute ~ summaryRoute
     }
 
     val errorHandler = ExceptionHandler { case exception => complete(StatusCodes.BadRequest, exception.toString) }

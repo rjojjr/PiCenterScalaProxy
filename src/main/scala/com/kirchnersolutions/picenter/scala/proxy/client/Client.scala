@@ -52,11 +52,19 @@ object Client extends Addresses with ConfigValues {
     }
   }
 
-  def summary()(implicit ec: ExecutionContext, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
+  def summary()(implicit ec: ExecutionContext, ac: ActorSystem, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
     val url = getUri(protocol, host_name, host_port, getIP)
     val uri = url + SUMMARY_ENDPOINT
 
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = uri))
+    responseFuture.flatMap {
+      case response @ HttpResponse(StatusCodes.OK, _, _, _) if (response.entity.contentType == ContentTypes.`application/json`) =>
+        val entity = response.entity
+        responseUnmarshaller(entity)
+      case _ =>
+        Future.failed(new RuntimeException("something went wrong"))
+    }
   }
 
 }
