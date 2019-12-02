@@ -1,4 +1,4 @@
-package com.kirchnersolutions.picenter.scala.proxy.routes
+package com.kirchnersolutions.picenter.scala.proxy.routers
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.server.Directives.{as, complete, entity, path, post}

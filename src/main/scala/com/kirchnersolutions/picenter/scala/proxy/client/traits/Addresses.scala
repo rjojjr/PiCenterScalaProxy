@@ -9,7 +9,7 @@ trait Addresses {
     inetAddress.getHostAddress
   }
 
-  def getUri(protocol: String, hostName: String, port: String, ip: String => String): String = {
+  def getUri(protocol: String, hostName: String, port: Int, ip: String => String): String = {
     val ipAddress = ip(hostName)
     s"$protocol://${ipAddress}:$port/"
   }

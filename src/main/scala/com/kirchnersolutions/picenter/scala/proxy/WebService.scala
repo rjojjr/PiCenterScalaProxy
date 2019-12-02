@@ -8,7 +8,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants
 import com.kirchnersolutions.picenter.scala.proxy.client.Client.{logOut, logon}
-import com.kirchnersolutions.picenter.scala.proxy.routes.{LoginRouter, LogoutRouter, SummaryRouter}
+import com.kirchnersolutions.picenter.scala.proxy.routers.{LoginRouter, LogoutRouter, SummaryRouter}
 import com.typesafe.config.{Config, ConfigFactory}
 
 import scala.concurrent.ExecutionContext
@@ -23,7 +23,6 @@ object WebService extends ConfigValues{
     implicit val system: ActorSystem = ActorSystem("actor-system")  // ActorMaterializer requires an implicit ActorSystem
     implicit val executionContextExecutor = system.dispatcher  // bindingFuture.map requires an implicit ExecutionContext
     implicit val materializer = ActorMaterializer()  // bindAndHandle requires an implicit materializer
-
 
     object MainRouter extends LoginRouter with LogoutRouter with SummaryRouter {
       val routes = loginRoute ~ logoutRoute ~ summaryRoute
