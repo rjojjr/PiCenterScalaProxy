@@ -2,7 +2,7 @@ package com.kirchnersolutions.picenter.scala.proxy.objects
 
 import com.kirchnersolutions.picenter.scala.proxy.models.RoomSummary
 
-object SummaryParser {
+trait SummaryParser {
 
   def parseSummaries(summaries: Seq[RoomSummary]): Unit = {
     summaries.foreach(summary => {
