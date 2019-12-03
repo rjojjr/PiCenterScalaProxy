@@ -1,22 +1,21 @@
 package com.kirchnersolutions.picenter.scala.proxy.objects
 
 import com.kirchnersolutions.picenter.scala.proxy.models.RestUser
-import com.kirchnersolutions.picenter.scala.proxy.traits.RestObject
-
 class User {
-
-  var username: String
-  var 
+  var username: String = ""
+  var token: String = ""
 
   def this(user: RestUser) = {
-    this();
-    this.user =
-    def apply (): User = new User ()
+    this()
+    this.username = user.userName
+    this.token = user.token
   }
 
   def getToken():String = {
-    this.user.token
+    this.token
   }
 
+  def getUsername(): String = {
+    this.username
+  }
 }
-object Use
