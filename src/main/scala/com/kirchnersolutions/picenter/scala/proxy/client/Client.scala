@@ -7,7 +7,7 @@ import akka.http.scaladsl.unmarshalling.FromEntityUnmarshaller
 import com.kirchnersolutions.picenter.scala.proxy.client.traits.Addresses
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants._
 import com.kirchnersolutions.picenter.scala.proxy.models._
-import com.kirchnersolutions.picenter.scala.proxy.objects.User
+import akka.http.scaladsl.model.headers.`Set-Cookie`
 import com.kirchnersolutions.picenter.scala.proxy.traits.ConfigValues
 import io.circe.syntax._
 
@@ -36,6 +36,7 @@ object Client extends Addresses with ConfigValues {
     responseFuture.flatMap {
       case response @ HttpResponse(StatusCodes.OK, _, _, _) if (response.entity.contentType == ContentTypes.`application/json`) =>
           val entity = response.entity
+        val setCookies = response.headers[`Set-Cookie`]
           responseUnmarshaller(entity)
       case _ => Future.failed(new RuntimeException("something went wrong"))
     }
@@ -51,6 +52,7 @@ object Client extends Addresses with ConfigValues {
     responseFuture.flatMap {
       case response @ HttpResponse(StatusCodes.OK, _, _, _) if (response.entity.contentType == ContentTypes.`application/json`) =>
         val entity = response.entity
+        val setCookies = response.headers[`Set-Cookie`]
         responseUnmarshaller(entity)
       case _ =>
         Future.failed(new RuntimeException("something went wrong"))
@@ -68,6 +70,7 @@ object Client extends Addresses with ConfigValues {
     responseFuture.flatMap {
       case response @ HttpResponse(StatusCodes.OK, _, _, _) if (response.entity.contentType == ContentTypes.`application/json`) =>
         val entity = response.entity
+        val setCookies = response.headers[`Set-Cookie`]
         responseUnmarshaller(entity)
       case _ =>
         Future.failed(new RuntimeException("something went wrong"))
