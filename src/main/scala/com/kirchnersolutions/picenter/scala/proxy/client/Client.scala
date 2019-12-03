@@ -7,12 +7,17 @@ import akka.http.scaladsl.unmarshalling.FromEntityUnmarshaller
 import com.kirchnersolutions.picenter.scala.proxy.client.traits.Addresses
 import com.kirchnersolutions.picenter.scala.proxy.constants.PiCenterConstants._
 import com.kirchnersolutions.picenter.scala.proxy.models._
+import com.kirchnersolutions.picenter.scala.proxy.objects.User
 import com.kirchnersolutions.picenter.scala.proxy.traits.ConfigValues
 import io.circe.syntax._
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import com.kirchnersolutions.picenter.scala.proxy.objects.User
+
 object Client extends Addresses with ConfigValues {
+
+  var token: String = ""
 
   def logon(form: LogonForm)(implicit ec: ExecutionContext, ac: ActorSystem, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
@@ -55,7 +60,9 @@ object Client extends Addresses with ConfigValues {
   def summary()(implicit ec: ExecutionContext, ac: ActorSystem, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
     val url = getUri(protocol, host_name, host_port, getIP)
-    val uri = url + SUMMARY_ENDPOINT
+    println(token)
+    //val uri = url + SUMMARY_ENDPOINT
+    val uri = s"${url}${SUMMARY_ENDPOINT}?userId=${token}"
 
     val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = uri))
     responseFuture.flatMap {

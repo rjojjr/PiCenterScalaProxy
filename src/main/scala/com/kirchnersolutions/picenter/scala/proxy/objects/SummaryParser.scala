@@ -50,3 +50,5 @@ trait SummaryParser {
   }
 
 }
+
+object SummaryParser
