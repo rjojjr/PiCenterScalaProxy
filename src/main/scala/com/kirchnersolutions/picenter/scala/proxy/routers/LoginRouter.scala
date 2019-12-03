@@ -17,7 +17,6 @@ trait LoginRouter {
         val res = logon(logonForm)
         res.foreach(x => {
           Client.token = x.restUser.token
-          println(Client.token)
         })
         complete(res)
       }

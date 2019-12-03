@@ -62,7 +62,6 @@ object Client extends Addresses with ConfigValues {
   def summary()(implicit ec: ExecutionContext, ac: ActorSystem, responseUnmarshaller: FromEntityUnmarshaller[RestResponse]) = {
 
     val url = getUri(protocol, host_name, host_port, getIP)
-    println(token)
     //val uri = url + SUMMARY_ENDPOINT
     val uri = s"${url}${SUMMARY_ENDPOINT}?userId=${token}"
 
